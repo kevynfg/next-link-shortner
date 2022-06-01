@@ -20,7 +20,7 @@ const CreateLinkForm: NextPage = () => {
 
   const handleCreateShortner = async (formData: Form) => {
       try {
-        await axios.post("/api/create-shortlink", formData)
+        await axios.post(`${process.env.API_URL}/create-shortlink`, formData)
       } catch (error) {
           console.error(error)
       }
