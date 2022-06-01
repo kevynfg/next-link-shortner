@@ -2,7 +2,6 @@ import { NextPage } from "next";
 import Head from "next/head";
 import { useState } from "react";
 import { nanoid } from "nanoid";
-import axios from 'axios'
 import { api } from '../../lib/api'
 
 type Form = {
@@ -12,15 +11,15 @@ type Form = {
 
 const CreateLinkForm: NextPage = () => {
   const [form, setForm] = useState<Form>({ url: "", shortCode: "" });
-  let url;
+  let url = "";
 
-  if (window.location.origin) {
+  if (window.location && window.location.origin) {
       url = window.location.origin
   }
 
   const handleCreateShortner = async (formData: Form) => {
       try {
-        await api.post("/create-shortlink", JSON.stringify(formData))
+        await api.post("/create-shortlink", formData)
       } catch (error) {
           console.error(error)
       }
