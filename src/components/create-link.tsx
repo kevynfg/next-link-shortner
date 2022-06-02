@@ -35,7 +35,6 @@ const CreateLinkForm: NextPage = () => {
       if (axios.isAxiosError(error)) {
         const axiosError = error as AxiosError<ServerError>;
         if (axiosError && axiosError.response) {
-          console.log(axiosError.response);
           setHasError(axiosError.response.data.message);
         }
       }
@@ -50,7 +49,7 @@ const CreateLinkForm: NextPage = () => {
           <input
             type="button"
             value="Copy link"
-            className="rounded bg-pink-500 py-1.5 px-1 font-bold cursor-pointer ml-2"
+            className="rounded bg-blue-500 py-1.5 px-1 font-bold cursor-pointer ml-2"
             onClick={() => {
               copy(`${url}/${shortCodeCreated.shortCode}`);
             }}
@@ -58,7 +57,7 @@ const CreateLinkForm: NextPage = () => {
         <input
           type="button"
           value="Reset"
-          className="rounded bg-pink-500 py-1.5 px-1 font-bold cursor-pointer m-5"
+          className="rounded bg-blue-500 py-1.5 px-1 font-bold cursor-pointer m-5"
           onClick={() => {
             setForm({ shortCode: "", url: "" });
             setShortCodeCreated({ shortCode: "", url: "" });
@@ -75,9 +74,11 @@ const CreateLinkForm: NextPage = () => {
         <title>Link Shortner</title>
       </Head>
       <main className="flex justify-center items-center">
-        <section className="max-w-4xl">
+
+        <section className="max-w-4xl h-screen flex flex-col justify-center">
+           <h1 className="font-bold">Create shortlink close to the Edge!</h1>
           <form
-            className="flex flex-col justify-center h-screen sm:w-2/3 md:w-1/2 lg:w-9/12 mt-5"
+            className="flex flex-col justify-center sm:w-2/3 md:w-1/2 lg:w-9/12 mt-5"
             onSubmit={async (e) => {
               e.preventDefault();
               await handleCreateShortner(form);
@@ -115,7 +116,7 @@ const CreateLinkForm: NextPage = () => {
                     shortCode: code,
                   });
                 }}
-                className="rounded bg-pink-500 py-1.5 px-1 font-bold cursor-pointer ml-2"
+                className="rounded bg-blue-500 py-1.5 px-1 font-bold cursor-pointer ml-2"
               />
             </div>
             <div className="flex items-center">
@@ -133,7 +134,7 @@ const CreateLinkForm: NextPage = () => {
                 required
               />
             </div>
-            <input type="submit" value="Create" className="rounded bg-pink-500 p-1 font-bold cursor-pointer mt-1" />
+            <input type="submit" value="Create" className="rounded bg-blue-500 p-1 font-bold cursor-pointer mt-1" />
           </form>
         </section>
       </main>
