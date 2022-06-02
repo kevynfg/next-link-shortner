@@ -2,28 +2,70 @@ import { NextPage } from "next";
 import Head from "next/head";
 import { useState } from "react";
 import { nanoid } from "nanoid";
-import { api } from '../../lib/api'
-import axios from "axios";
+import axios, { AxiosError } from "axios";
+import copy from "copy-to-clipboard";
 
 type Form = {
   url: string;
   shortCode: string;
 };
 
+type ServerError = {message: string}
+
 const CreateLinkForm: NextPage = () => {
   const [form, setForm] = useState<Form>({ url: "", shortCode: "" });
+  const [shortCodeCreated, setShortCodeCreated] = useState<Form>();
+  const [hasError, setHasError] = useState("");
   let url = "";
 
   if (window.location && window.location.origin) {
-      url = window.location.origin
+    url = window.location.origin;
   }
 
   const handleCreateShortner = async (formData: Form) => {
-      try {
-        await axios.post(`${process.env.API_URL}/create-shortlink`, formData)
-      } catch (error) {
-          console.error(error)
+    try {
+      const { data: shortLinkResponse } = await axios.post(`${process.env.API_URL}/create-shortlink`, formData);
+      if (shortLinkResponse?.data?.shortCode && shortLinkResponse?.data?.url) {
+        setShortCodeCreated({
+          shortCode: shortLinkResponse.data.shortCode,
+          url: shortLinkResponse.data.url,
+        });
       }
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        const axiosError = error as AxiosError<ServerError>;
+        if (axiosError && axiosError.response) {
+          setHasError(axiosError.response.data.message);
+        }
+      }
+    }
+  };
+
+  if (shortCodeCreated?.shortCode && shortCodeCreated?.url) {
+    return (
+      <>
+        <div className="flex justify-center items-center mb-3">
+          <h1 className="text-center text-2xl font-bold">{`${url}/${shortCodeCreated.shortCode}`}</h1>
+          <input
+            type="button"
+            value="Copy link"
+            className="rounded bg-pink-500 py-1.5 px-1 font-bold cursor-pointer ml-2"
+            onClick={() => {
+              copy(`${url}/${shortCodeCreated.shortCode}`);
+            }}
+          />
+        <input
+          type="button"
+          value="Reset"
+          className="rounded bg-pink-500 py-1.5 px-1 font-bold cursor-pointer m-5"
+          onClick={() => {
+            setForm({ shortCode: "", url: "" });
+            setShortCodeCreated({ shortCode: "", url: "" });
+          }}
+        />
+        </div>
+      </>
+    );
   }
 
   return (
@@ -32,11 +74,19 @@ const CreateLinkForm: NextPage = () => {
         <title>Link Shortner</title>
       </Head>
       <main className="flex justify-center items-center">
-        <section>
-          <form className="flex flex-col justify-center h-screen sm:w-2/3 md:w-1/2 lg:w-9/12 mt-5" onSubmit={async (e) => {
+        <section className="max-w-4xl">
+          <form
+            className="flex flex-col justify-center h-screen sm:w-2/3 md:w-1/2 lg:w-9/12 mt-5"
+            onSubmit={async (e) => {
               e.preventDefault();
-              await handleCreateShortner(form)
-          }}>
+              await handleCreateShortner(form);
+            }}
+          >
+            {hasError && (
+              <div className="text-red-500 text-center">
+                <p>Shortlink already in use</p>
+              </div>
+            )}
             <div className="flex items-center">
               <span className="font-medium mr-2">{url}/</span>
               <input
@@ -70,6 +120,7 @@ const CreateLinkForm: NextPage = () => {
             <div className="flex items-center">
               <span className="font-medium mr-2">Link</span>
               <input
+                className="w-full"
                 type="url"
                 placeholder="https://google.com"
                 onChange={({ target }) => {
