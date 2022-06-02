@@ -4,7 +4,6 @@ import {NextApiRequest, NextApiResponse} from 'next'
 import { prisma } from '../../../src/db/prisma'
 
 export default async(req: NextApiRequest, res: NextApiResponse) => {
-    console.log(`this api ${JSON.stringify(req.query)}`)
     const slug = req.query["slug"]
     if (slug && typeof slug !== "string") {
         res.statusCode = 404;
@@ -20,7 +19,6 @@ export default async(req: NextApiRequest, res: NextApiResponse) => {
             }
         }
     })
-    console.log('data => ', data)
     if (!data) {
         res.statusCode = 404;
         res.send(JSON.stringify({message: "Slug not found"}))

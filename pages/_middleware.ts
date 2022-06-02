@@ -2,10 +2,9 @@
 import {NextRequest, NextFetchEvent, NextResponse} from 'next/server'
 
 export async function middleware(req: NextRequest, _ev: NextFetchEvent) {
-    if (!req.nextUrl.pathname.startsWith('/api/get-url')) {
+    if ((req.nextUrl.pathname.startsWith('/api/') || req.nextUrl.pathname === "/")) {
         return;
     }
-
     const slug = req.nextUrl.pathname.split("/").pop();
     const fetchSlug = await fetch(`${req.nextUrl.origin}/api/get-url/${slug}`)
     if (fetchSlug.status === 404) {

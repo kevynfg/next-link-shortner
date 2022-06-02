@@ -1,5 +1,5 @@
 import {NextApiResponse, NextApiRequest} from 'next'
-import { prisma } from "../../src/db/prisma";
+import { prisma } from "../../../src/db/prisma";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const {url, shortCode} = req.body;

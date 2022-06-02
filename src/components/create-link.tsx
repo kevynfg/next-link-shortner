@@ -24,7 +24,7 @@ const CreateLinkForm: NextPage = () => {
 
   const handleCreateShortner = async (formData: Form) => {
     try {
-      const { data: shortLinkResponse } = await axios.post(`${process.env.API_URL}/create-shortlink`, formData);
+      const { data: shortLinkResponse } = await axios.post(`${process.env.API_URL}/link/create-shortlink`, formData);
       if (shortLinkResponse?.data?.shortCode && shortLinkResponse?.data?.url) {
         setShortCodeCreated({
           shortCode: shortLinkResponse.data.shortCode,
@@ -35,6 +35,7 @@ const CreateLinkForm: NextPage = () => {
       if (axios.isAxiosError(error)) {
         const axiosError = error as AxiosError<ServerError>;
         if (axiosError && axiosError.response) {
+          console.log(axiosError.response);
           setHasError(axiosError.response.data.message);
         }
       }
