@@ -75,10 +75,10 @@ const CreateLinkForm: NextPage = () => {
       </Head>
       <main className="flex justify-center items-center">
 
-        <section className="max-w-4xl h-screen flex flex-col justify-center">
+        <section className="w-full max-w-[1100px] h-screen flex flex-col items-center justify-center">
            <h1 className="font-bold">Create shortlink close to the Edge!</h1>
           <form
-            className="flex flex-col justify-center sm:w-2/3 md:w-1/2 lg:w-9/12 mt-5"
+            className="flex flex-col justify-center sm:w-3/4 md:w-1/2 lg:w-9/12 mt-5"
             onSubmit={async (e) => {
               e.preventDefault();
               await handleCreateShortner(form);
@@ -89,12 +89,13 @@ const CreateLinkForm: NextPage = () => {
                 <p>Shortlink already in use</p>
               </div>
             )}
-            <div className="flex items-center">
+            <div className="flex items-center justify-between">
               <span className="font-medium mr-2">{url}/</span>
               <input
                 type="text"
                 minLength={1}
-                placeholder="dartrix"
+                className="lg:w-2/5"
+                placeholder="Enter a name for your shortlink"
                 pattern={"^[-a-zA-Z0-9]+$"}
                 title="Only alphanumeric characters and hypens are allowed. No spaces."
                 onChange={({ target }) => {
@@ -134,7 +135,9 @@ const CreateLinkForm: NextPage = () => {
                 required
               />
             </div>
-            <input type="submit" value="Create" className="rounded bg-blue-500 p-1 font-bold cursor-pointer mt-1" />
+            <div className="flex items-center justify-center">
+              <input type="submit" value="Create" className="rounded bg-blue-500 p-1 font-bold cursor-pointer mt-1 w-60"/>
+            </div>
           </form>
         </section>
       </main>
